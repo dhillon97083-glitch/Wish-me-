@@ -1,141 +1,155 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Syber Meet</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: Arial, sans-serif;
-      background: #0a0a1a;
-      color: #fff;
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    #lobby {
-      text-align: center;
-      padding: 40px 30px;
-      background: #13132a;
-      border-radius: 20px;
-      border: 1px solid #2a2a4a;
-      max-width: 420px;
-      width: 90%;
-    }
-    .logo { font-size: 48px; margin-bottom: 14px; }
-    h1 {
-      font-size: 28px;
-      margin-bottom: 6px;
-      background: linear-gradient(90deg, #4f8ef7, #a855f7);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    p { color: #888; font-size: 14px; margin-bottom: 28px; }
-    input {
-      width: 100%;
-      padding: 12px 16px;
-      border-radius: 10px;
-      border: 1px solid #2a2a4a;
-      background: #0a0a1a;
-      color: #fff;
-      font-size: 15px;
-      margin-bottom: 14px;
-      outline: none;
-    }
-    input:focus { border-color: #4f8ef7; }
-    input::placeholder { color: #444; }
-    button {
-      width: 100%;
-      padding: 13px;
-      border-radius: 10px;
-      border: none;
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
-      background: linear-gradient(90deg, #4f8ef7, #a855f7);
-      color: #fff;
-      margin-bottom: 10px;
-    }
-    button:hover { opacity: 0.88; }
-    #shareBox {
-      margin-top: 16px;
-      background: #0a0a1a;
-      border-radius: 10px;
-      padding: 12px 14px;
-      border: 1px solid #2a2a4a;
-      font-size: 13px;
-      color: #aaa;
-      word-break: break-all;
-      display: none;
-    }
-    #shareLink { color: #4f8ef7; }
-    #copyBtn {
-      margin-top: 10px;
-      background: #1e1e3a;
-      font-size: 13px;
-      padding: 8px;
-      font-weight: 500;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MeetNow</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0d0d0d; color: #fff; font-family: 'Courier New', monospace; height: 100vh; display: flex; flex-direction: column; }
+  #top { display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; background: #111; border-bottom: 1px solid #222; }
+  #top h1 { font-size: 1.1rem; letter-spacing: 4px; color: #00ffaa; }
+  #room-bar { display: flex; gap: 8px; }
+  #room-bar input { background: #1a1a1a; border: 1px solid #333; color: #fff; padding: 6px 12px; border-radius: 4px; font-family: inherit; font-size: 0.8rem; width: 160px; }
+  #room-bar button { background: #00ffaa; color: #000; border: none; padding: 6px 14px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.8rem; transition: opacity .2s; }
+  #room-bar button:hover { opacity: .8; }
+  #videos { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px; }
+  .vid-box { position: relative; background: #111; border-radius: 10px; overflow: hidden; border: 1px solid #222; display: flex; align-items: center; justify-content: center; }
+  .vid-box video { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .vid-box .label { position: absolute; bottom: 10px; left: 12px; background: rgba(0,0,0,.6); padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; letter-spacing: 1px; }
+  .placeholder { color: #333; font-size: 0.85rem; letter-spacing: 2px; }
+  #controls { display: flex; gap: 12px; justify-content: center; padding: 14px; background: #111; border-top: 1px solid #222; }
+  #controls button { background: #1e1e1e; border: 1px solid #333; color: #fff; padding: 10px 22px; border-radius: 30px; cursor: pointer; font-size: 0.8rem; letter-spacing: 1px; transition: all .2s; }
+  #controls button:hover { background: #2a2a2a; }
+  #controls button.danger { background: #ff3355; border-color: #ff3355; }
+  #controls button.active { background: #00ffaa; color: #000; border-color: #00ffaa; }
+  #status { text-align: center; font-size: 0.72rem; color: #555; padding: 6px; letter-spacing: 1px; background: #0d0d0d; }
+</style>
 </head>
 <body>
 
-<div id="lobby">
-  <div class="logo">📹</div>
-  <h1>Syber Meet</h1>
-  <p>Free instant video meetings — no account needed</p>
-
-  <input type="text" id="nameInput" placeholder="Your name" />
-  <input type="text" id="roomInput" placeholder="Room name (leave blank for random)" />
-  <button onclick="startMeeting()">Start Meeting</button>
-
-  <div id="shareBox">
-    🔗 Share this link with others:<br/><br/>
-    <span id="shareLink"></span>
-    <button id="copyBtn" onclick="copyLink()">Copy Link</button>
+<div id="top">
+  <h1>MEETNOW</h1>
+  <div id="room-bar">
+    <input id="roomId" placeholder="Room ID..." />
+    <button onclick="joinRoom()">JOIN</button>
+    <button onclick="createRoom()">CREATE</button>
   </div>
 </div>
 
+<div id="videos">
+  <div class="vid-box">
+    <div class="placeholder" id="ph1">YOUR CAM</div>
+    <video id="localVideo" autoplay muted playsinline></video>
+    <div class="label">YOU</div>
+  </div>
+  <div class="vid-box">
+    <div class="placeholder" id="ph2">WAITING...</div>
+    <video id="remoteVideo" autoplay playsinline></video>
+    <div class="label">REMOTE</div>
+  </div>
+</div>
+
+<div id="controls">
+  <button id="micBtn" onclick="toggleMic()">🎤 MIC ON</button>
+  <button id="camBtn" onclick="toggleCam()">📷 CAM ON</button>
+  <button class="danger" onclick="hangUp()">⬛ END</button>
+</div>
+<div id="status">Not connected — create or join a room</div>
+
 <script>
-  const params = new URLSearchParams(window.location.search);
-  const roomFromURL = params.get('room');
-  const nameFromURL = params.get('name');
+const config = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] };
+let pc, localStream, ws, roomId;
+let micOn = true, camOn = true;
 
-  if (roomFromURL) {
-    joinJitsi(roomFromURL, nameFromURL || 'Guest');
-  }
+async function startMedia() {
+  localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+  document.getElementById('localVideo').srcObject = localStream;
+  document.getElementById('ph1').style.display = 'none';
+}
 
-  function startMeeting() {
-    const name = document.getElementById('nameInput').value.trim() || 'Host';
-    const room = document.getElementById('roomInput').value.trim() || 'syber-' + Math.random().toString(36).substr(2, 6);
-    const link = `${location.origin}${location.pathname}?room=${room}&name=Guest`;
-    document.getElementById('shareLink').textContent = link;
-    document.getElementById('shareBox').style.display = 'block';
-    joinJitsi(room, name);
-  }
+function connectWS(room, isHost) {
+  // Using free signaling via PeerJS for simplicity
+  status(`Room: ${room} — Share this ID with your partner`);
+}
 
-  function joinJitsi(room, name) {
-    document.getElementById('lobby').style.display = 'none';
-    const api = new JitsiMeetExternalAPI('meet.jit.si', {
-      roomName: room,
-      width: '100%',
-      height: '100vh',
-      parentNode: document.body,
-      userInfo: { displayName: name },
-      configOverwrite: { startWithAudioMuted: false, startWithVideoMuted: false },
-      interfaceConfigOverwrite: { SHOW_JITSI_WATERMARK: false }
-    });
-  }
+async function createRoom() {
+  await startMedia();
+  roomId = Math.random().toString(36).substr(2, 6).toUpperCase();
+  document.getElementById('roomId').value = roomId;
+  initPeerJS(true);
+}
 
-  function copyLink() {
-    const link = document.getElementById('shareLink').textContent;
-    navigator.clipboard.writeText(link);
-    document.getElementById('copyBtn').textContent = '✅ Copied!';
-    setTimeout(() => document.getElementById('copyBtn').textContent = 'Copy Link', 2000);
-  }
+async function joinRoom() {
+  await startMedia();
+  roomId = document.getElementById('roomId').value.trim();
+  if (!roomId) return alert('Enter a Room ID');
+  initPeerJS(false);
+}
+
+function initPeerJS(isHost) {
+  const script = document.createElement('script');
+  script.src = 'https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js';
+  script.onload = () => setupPeer(isHost);
+  document.head.appendChild(script);
+}
+
+function setupPeer(isHost) {
+  const myId = isHost ? 'MEET-' + roomId : 'JOIN-' + roomId + '-' + Date.now();
+  const peer = new Peer(myId, { debug: 0 });
+
+  peer.on('open', id => {
+    if (isHost) {
+      status(`Room created: ${roomId} — Waiting for partner...`);
+      peer.on('call', call => {
+        call.answer(localStream);
+        call.on('stream', s => showRemote(s));
+      });
+    } else {
+      status(`Joining room ${roomId}...`);
+      const call = peer.call('MEET-' + roomId, localStream);
+      call.on('stream', s => showRemote(s));
+      call.on('error', e => status('Connection failed. Check Room ID.'));
+    }
+  });
+
+  peer.on('error', e => status('Error: ' + e.type));
+}
+
+function showRemote(stream) {
+  document.getElementById('remoteVideo').srcObject = stream;
+  document.getElementById('ph2').style.display = 'none';
+  status('Connected ✓');
+}
+
+function toggleMic() {
+  micOn = !micOn;
+  localStream?.getAudioTracks().forEach(t => t.enabled = micOn);
+  const b = document.getElementById('micBtn');
+  b.textContent = micOn ? '🎤 MIC ON' : '🔇 MIC OFF';
+  b.className = micOn ? '' : 'active';
+}
+
+function toggleCam() {
+  camOn = !camOn;
+  localStream?.getVideoTracks().forEach(t => t.enabled = camOn);
+  const b = document.getElementById('camBtn');
+  b.textContent = camOn ? '📷 CAM ON' : '📷 CAM OFF';
+  b.className = camOn ? '' : 'active';
+}
+
+function hangUp() {
+  localStream?.getTracks().forEach(t => t.stop());
+  document.getElementById('localVideo').srcObject = null;
+  document.getElementById('remoteVideo').srcObject = null;
+  document.getElementById('ph1').style.display = '';
+  document.getElementById('ph2').style.display = '';
+  status('Call ended');
+}
+
+function status(msg) {
+  document.getElementById('status').textContent = msg;
+}
 </script>
-<script src="https://meet.jit.si/external_api.js"></script>
 </body>
 </html>
